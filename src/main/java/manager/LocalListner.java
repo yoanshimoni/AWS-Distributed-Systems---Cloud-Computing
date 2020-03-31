@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
 public class LocalListner implements MessageListener {
 
@@ -17,7 +18,11 @@ public class LocalListner implements MessageListener {
     @Override
     public void onMessage(Message msg) {
 
-        System.out.printf("Got a message: \t%s", msg.toString());
+        try {
+            System.out.printf("Received: %s", ((TextMessage) msg).getText());
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
         // Convert message to NewTask object
 //        NewTask newTask = parseMsg(msg);
 

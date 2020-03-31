@@ -4,8 +4,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.*;
 
-import java.util.List;
-
 
 public class sqsOPS {
     public final String QUEUE_NAME = "L2M_Queue";
@@ -82,11 +80,11 @@ public class sqsOPS {
                 .messageBody(message)
                 .build();
         sqsClient.sendMessage(sendMsgRequest);
-
-        ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
-                .queueUrl(queueUrl)
-                .build();
-        List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
-        messages.forEach(x -> System.out.printf("message sent:\n%s", x.body()));
+        System.out.printf("sent %s", message);
+//        ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
+//                .queueUrl(queueUrl)
+//                .build();
+//        List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
+//        messages.forEach(x -> System.out.printf("message sent:\n%s", x.body()));
     }
 }

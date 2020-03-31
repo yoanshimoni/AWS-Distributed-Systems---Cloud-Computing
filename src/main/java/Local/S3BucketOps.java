@@ -28,7 +28,7 @@ public class S3BucketOps {
                 .region(region)
                 .build();
 
-        System.out.printf("bucket name is %s", this.bucketName);
+        System.out.printf("bucket name is %s\n", this.bucketName);
 
         s3.createBucket(CreateBucketRequest
                 .builder()
@@ -48,7 +48,8 @@ public class S3BucketOps {
 
         //printing bucket contents
 
-   /*     DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder().bucket(bucket).build();
+
+        /*DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder().bucket(bucketName).build();
         s3.deleteBucket(deleteBucketRequest);*/
 
     }

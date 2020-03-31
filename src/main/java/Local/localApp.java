@@ -1,4 +1,5 @@
 package Local;
+
 /*The application resides on a local (non-cloud) machine. Once started, it reads the input file from the user, and:
 
 Checks if a Manager node is active on the EC2 cloud. If it is not, the application will start the Manager node.
@@ -14,8 +15,11 @@ public class localApp {
 
         Ec2 ec2 = new Ec2();
         S3BucketOps s3 = new S3BucketOps(args[0]);
+        int numOfWorkers = Integer.parseInt(args[2]);
         sqsOPS sqs = new sqsOPS();
-        sqs.SendMessage(s3.bucketName);
+        Task task = new Task(s3.bucketName, numOfWorkers);
+        sqs.SendMessage(task.toString());
+
 
     }
 
