@@ -20,5 +20,9 @@ public class Manager {
         connectionToLocalApp = new QueueConnection(L2M_QUEUE, new LocalListener());
         connectionToLocalApp.start();
         downloadPool = Executors.newFixedThreadPool(DOWNLOAD_THREADS);
+        exit(0);
+    }
+
+    private static void exit(int i) {
     }
 }
