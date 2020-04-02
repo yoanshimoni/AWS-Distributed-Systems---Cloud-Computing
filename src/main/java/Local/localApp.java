@@ -13,12 +13,17 @@ public class localApp {
 
     public static void main(String[] args) {
 
+        final String L2M_QUEUE = "L2M_Queue"; // local to manager
+        final String M2W_QUEUE = "M2W_Queue"; // manager to workers
+
         Ec2 ec2 = new Ec2();
         S3BucketOps s3 = new S3BucketOps(args[0]);
         int numOfWorkers = Integer.parseInt(args[2]);
-        sqsOPS sqs = new sqsOPS();
+        sqsOPS sqsOPS = new sqsOPS();
+        String L2M_QUEUE_URL = sqsOPS.createSQS(L2M_QUEUE);
+        sqsOPS.createSQS(M2W_QUEUE);
         Task task = new Task(s3.bucketName, numOfWorkers);
-        sqs.SendMessage(task.toString());
+        sqsOPS.SendMessage(task.toString(), L2M_QUEUE_URL);
 
 
     }

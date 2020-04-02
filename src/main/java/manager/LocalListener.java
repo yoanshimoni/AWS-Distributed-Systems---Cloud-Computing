@@ -1,24 +1,24 @@
 package manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class LocalListener implements MessageListener {
-
+    private int numOfFiles = 0;
     private ObjectMapper mapper;
 
     public LocalListener() {
@@ -62,10 +62,12 @@ public class LocalListener implements MessageListener {
         return task;
     }
 
+    public int getNumOfFiles() {
+        return numOfFiles;
+    }
+
     private void download(Task newTask) {
         S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
-
-
         String key = "resources";
         String bucketName = newTask.getBucketName();
         Region region = Region.US_EAST_1;
@@ -73,12 +75,27 @@ public class LocalListener implements MessageListener {
                 .builder()
                 .region(region)
                 .build();
-        ResponseInputStream<GetObjectResponse> s3Object = s3.getObject(GetObjectRequest.builder().bucket(bucketName).key(key).build(),
-                ResponseTransformer.toInputStream());
-        int numOfFiles = 0;
+        //GetObjectResponse s3Object =
+        s3.getObject(GetObjectRequest.builder().bucket(bucketName).key(key).build(),
+                ResponseTransformer.toFile(Paths.get("resources.txt")));
 
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(s3Object));
+        try {
+            File myObj = new File("resources.txt");
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                this.numOfFiles++;
+                String data = myReader.nextLine();
+                System.out.println(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        System.out.printf("num of file is %d\n", this.numOfFiles);
+
+       /* BufferedReader reader = new BufferedReader(new InputStreamReader(s3Object));
         String line = null;
         while (true) {
             try {
@@ -92,8 +109,9 @@ public class LocalListener implements MessageListener {
             numOfFiles++;
             System.out.println();
 
-        }
-        System.out.printf("num of file is %d\n", numOfFiles);
+
+*/
+
 
     }
 }
