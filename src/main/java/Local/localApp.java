@@ -23,7 +23,7 @@ public class localApp {
         String L2M_QUEUE_URL = sqsOPS.createSQS(L2M_QUEUE);
         sqsOPS.createSQS(M2W_QUEUE);
         Task task = new Task(s3.bucketName, numOfWorkers);
-        sqsOPS.SendMessage(task.toString(), L2M_QUEUE_URL);
+        sqsOPS.SendMessage(task.toString(), L2M_QUEUE_URL); // sent a message with the bucket name to L2M_Queue
 
 
     }

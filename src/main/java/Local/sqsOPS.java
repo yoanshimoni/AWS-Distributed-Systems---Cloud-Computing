@@ -45,7 +45,7 @@ public class sqsOPS {
                 .messageBody(message)
                 .build();
         sqsClient.sendMessage(sendMsgRequest);
-        System.out.printf("sent %s", message);
+        System.out.printf("sent %s\n", message);
 //        ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
 //                .queueUrl(queueUrl)
 //                .build();

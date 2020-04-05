@@ -41,7 +41,7 @@ public class S3BucketOps {
         // List buckets
         ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder().build();
         ListBucketsResponse listBucketsResponse = s3.listBuckets(listBucketsRequest);
-        listBucketsResponse.buckets().forEach(x -> System.out.println(x.name()));
+//        listBucketsResponse.buckets().forEach(x -> System.out.println(x.name()));
 
         uploadFile(resources, s3, this.bucketName, key);
         // Delete empty bucket

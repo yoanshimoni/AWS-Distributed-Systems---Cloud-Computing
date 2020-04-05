@@ -5,19 +5,16 @@ import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.*;
 
 
-public class sqsOPS {
+public class Manager_sqsOPS {
 
-    public static String queueUrl = null;
-    public static SqsClient sqsClient = null;
+    public String queueUrl = null;
 
-    public sqsOPS() {
-
-
+    public Manager_sqsOPS() {
     }
 
-    public static String createSQS(String QUEUE_NAME) {
+    public String createSQS(String QUEUE_NAME) {
 
-        sqsClient = SqsClient.builder()
+        SqsClient sqsClient = SqsClient.builder()
                 .region(Region.US_EAST_1)
                 .build();
         try {
@@ -40,17 +37,17 @@ public class sqsOPS {
 
     }
 
-    public static void SendMessage(String message, String queueUrl) {
+    public void SendMessage(String message, String queueUrl) {
+        SqsClient sqsClient = SqsClient.builder()
+                .region(Region.US_EAST_1)
+                .build();
+        System.out.println(queueUrl);
         SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
                 .queueUrl(queueUrl)
                 .messageBody(message)
                 .build();
         sqsClient.sendMessage(sendMsgRequest);
-        System.out.printf("sent %s", message);
-//        ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
-//                .queueUrl(queueUrl)
-//                .build();
-//        List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
-//        messages.forEach(x -> System.out.printf("message sent:\n%s", x.body()));
+        System.out.printf("sent %s\n", message);
+
     }
 }

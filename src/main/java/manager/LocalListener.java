@@ -5,7 +5,6 @@ import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Object;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -20,8 +19,10 @@ import java.util.Scanner;
 public class LocalListener implements MessageListener {
     private int numOfFiles = 0;
     private ObjectMapper mapper;
+    private String QUEUE_URL;
 
-    public LocalListener() {
+    public LocalListener(String QUEUE_URL) {
+        this.QUEUE_URL = QUEUE_URL;
         mapper = new ObjectMapper();
     }
 
@@ -35,6 +36,7 @@ public class LocalListener implements MessageListener {
         }
         // Convert message to NewTask object
         Task newTask = parseMsg(msg);
+
         download(newTask);
 
         // Create a task to download and parse S3 file content
@@ -67,7 +69,7 @@ public class LocalListener implements MessageListener {
     }
 
     private void download(Task newTask) {
-        S3Object fullObject = null, objectPortion = null, headerOverrideObject = null;
+        Manager_sqsOPS manager_sqsOPS = new Manager_sqsOPS();
         String key = "resources";
         String bucketName = newTask.getBucketName();
         Region region = Region.US_EAST_1;
@@ -86,32 +88,17 @@ public class LocalListener implements MessageListener {
             while (myReader.hasNextLine()) {
                 this.numOfFiles++;
                 String data = myReader.nextLine();
-                System.out.println(data);
+                String[] parts = data.split("\t", 2);
+                //TODO send tasks to M2W quque
+                Manager.distributionPool.execute(new SendNewPDFtask(this.QUEUE_URL, parts[0], parts[1]));
+
             }
+
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
         System.out.printf("num of file is %d\n", this.numOfFiles);
-
-       /* BufferedReader reader = new BufferedReader(new InputStreamReader(s3Object));
-        String line = null;
-        while (true) {
-            try {
-                if ((line = reader.readLine()) == null) break;
-            } catch (IOException e) {
-                System.err.println("Caught an exception while parsing resources file from S3");
-                e.printStackTrace();
-                System.exit(1);
-            }
-            System.out.println(line);
-            numOfFiles++;
-            System.out.println();
-
-
-*/
-
-
     }
 }
