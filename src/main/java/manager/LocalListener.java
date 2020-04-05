@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class LocalListener implements MessageListener {
@@ -78,18 +79,24 @@ public class LocalListener implements MessageListener {
                 .region(region)
                 .build();
         //GetObjectResponse s3Object =
+        // this is a unique name , trust me i debugged it , a unique name is the best way
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("resources");
+        stringBuilder.append(Calendar.getInstance().getTimeInMillis());
+        stringBuilder.append(".txt");
+        System.out.printf("Downloaded the file, saved to be:\t%s\n",stringBuilder.toString());
+
         s3.getObject(GetObjectRequest.builder().bucket(bucketName).key(key).build(),
-                ResponseTransformer.toFile(Paths.get("resources.txt")));
+                ResponseTransformer.toFile(Paths.get(stringBuilder.toString())));
 
 
         try {
-            File myObj = new File("resources.txt");
+            File myObj = new File(stringBuilder.toString());
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 this.numOfFiles++;
                 String data = myReader.nextLine();
                 String[] parts = data.split("\t", 2);
-                //TODO send tasks to M2W quque
                 Manager.distributionPool.execute(new SendNewPDFtask(this.QUEUE_URL, parts[0], parts[1]));
 
             }

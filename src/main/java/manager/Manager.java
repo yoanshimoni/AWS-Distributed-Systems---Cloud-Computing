@@ -11,8 +11,12 @@ public class Manager {
     static final String M2W_VISIBILITY_TIMEOUT = "300";
     static ExecutorService downloadPool;
     static ExecutorService distributionPool;
+    static ExecutorService nodesCreationPool;
+    static ExecutorService ConvertPDFPool;
     static final int DOWNLOAD_THREADS = 5;
-    static final int DISTRIBUTION_THREADS = 300; //we go hard
+    static final int DISTRIBUTION_THREADS = 200; //we go hard
+    static final int CREATION_THREADS = 1;
+    static final int CONVERT_THREADS = 10;
 
 
     private static QueueConnection connectionToLocalApp;
@@ -20,26 +24,19 @@ public class Manager {
     private static Manager_sqsOPS manager_SQS;
 
     public static void main(String[] args) {
-        //TODO understand why i cant send message in M2W_QUEUE_URL
         manager_SQS = new Manager_sqsOPS();
         final String M2W_QUEUE_URL = manager_SQS.createSQS(M2W_QUEUE);
-//        SqsClient sqsClient = SqsClient.builder()
-//                .region(Region.US_EAST_1)
-//                .build();
-//        GetQueueUrlResponse getQueueUrlResponse =
-//                sqsClient.getQueueUrl(GetQueueUrlRequest.builder().queueName(M2W_QUEUE).build());
-//        String M2W_QUEUE_URL = getQueueUrlResponse.queueUrl();
-
-        // Create SQS connections to queues
-
-        downloadPool = Executors.newFixedThreadPool(DOWNLOAD_THREADS);
-        distributionPool = Executors.newFixedThreadPool(DISTRIBUTION_THREADS);
+        initialize();
         connectionToLocalApp = new QueueConnection(L2M_QUEUE, new LocalListener(M2W_QUEUE_URL));
         connectionToLocalApp.start();
 
-        exit(0);
     }
 
-    private static void exit(int i) {
+    private static void initialize() {
+        // Create thread pools for manager's tasks
+        downloadPool = Executors.newFixedThreadPool(DOWNLOAD_THREADS);
+        distributionPool = Executors.newFixedThreadPool(DISTRIBUTION_THREADS);
+        nodesCreationPool = Executors.newFixedThreadPool(CREATION_THREADS);
+        ConvertPDFPool = Executors.newFixedThreadPool(CONVERT_THREADS);
     }
 }
