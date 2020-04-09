@@ -222,7 +222,7 @@ public class Manager_Ec2 {
                         .build();
                 ec2.createTags(tagRequest);
                 System.out.println("created Worker" + i);
-                i++;
+                 i++;
             }
 
 

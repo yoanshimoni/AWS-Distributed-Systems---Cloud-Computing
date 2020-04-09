@@ -21,14 +21,14 @@ public class localApp {
         final String L2M_QUEUE = "L2M_Queue"; // local to manager
 //        final String M2W_QUEUE = "M2W_Queue"+localAppId; // manager to workers
 
-        Ec2 ec2 = new Ec2();
-        S3BucketOps s3 = new S3BucketOps(args[0], localAppId);
+        Ec2 ec2 = new Ec2(); //create ec2 manager if not already exists
+        S3BucketOps s3 = new S3BucketOps(args[0], localAppId); //create a bucket and use the local appid for the name
         int numOfWorkers = Integer.parseInt(args[2]);
         sqsOPS sqsOPS = new sqsOPS();
         String L2M_QUEUE_URL = sqsOPS.createSQS(L2M_QUEUE);
 //        sqsOPS.createSQS(M2W_QUEUE);
         Task task = new Task(s3.bucketName, numOfWorkers, "resources" + localAppId, localAppId);
-        sqsOPS.SendMessage(task.toString(), L2M_QUEUE_URL); // sent a message with the bucket name to L2M_Queue
+        sqsOPS.SendMessage(task.toString(), L2M_QUEUE_URL); // sent a message with the Task to L2M_Queue
 
 
     }

@@ -29,10 +29,12 @@ public class Manager {
 
     public static void main(String[] args) {
         manager_SQS = new Manager_sqsOPS();
+        //Manager to worker Queue
         final String M2W_QUEUE_URL = manager_SQS.createSQS(M2W_QUEUE);
         initialize();
         connectionToLocalApp = new QueueConnection(L2M_QUEUE, new LocalListener(M2W_QUEUE_URL));
         connectionToLocalApp.start();
+
         // connectionToWorkers = new QueueConnection(M2W_QUEUE, new WorkerListner(M2W_QUEUE_URL));
         //connectionToWorkers.start();
 
