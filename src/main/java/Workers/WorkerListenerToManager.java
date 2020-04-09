@@ -18,13 +18,11 @@ public class WorkerListenerToManager implements MessageListener {
     @Override
     public void onMessage(Message msg) {
 
-        System.out.println(parseMsg(msg).getURL());
+        NewPDFtask newPDFtask = parseMsg(msg);
 
 
-        // Create a task to download and parse S3 file content
 
         // Tell SQS to delete the message
-
         try {
             msg.acknowledge();
         } catch (JMSException ex) {
