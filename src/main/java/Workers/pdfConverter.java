@@ -1,12 +1,16 @@
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.io.IOException;
-import javax.imageio.*;
+package Workers;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.tools.PDFText2HTML;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 
 public class pdfConverter {

@@ -34,7 +34,7 @@ public class localApp {
     }
 
 
-    /*pdfConverter worker = new pdfConverter("/home/maor/Desktop/NLA.pdf");
+    /*Workers.pdfConverter worker = new Workers.pdfConverter("/home/maor/Desktop/NLA.pdf");
         worker.readPDF("ToText");
         worker.readPDF("ToHTML");
         worker.readPDF("ToImage");*/

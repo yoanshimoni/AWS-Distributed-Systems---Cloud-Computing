@@ -19,9 +19,7 @@ public class WorkerListenerToManager implements MessageListener {
     public void onMessage(Message msg) {
 
         NewPDFtask newPDFtask = parseMsg(msg);
-
-
-
+        Worker.slaves.execute(new HandleRequest(newPDFtask));
         // Tell SQS to delete the message
         try {
             msg.acknowledge();

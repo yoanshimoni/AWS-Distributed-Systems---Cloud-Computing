@@ -24,7 +24,7 @@ public class LocalListener implements MessageListener {
     private String M2W_QUEUE_URL;
 
     public LocalListener(String QUEUE_URL) {
-        this.M2W_QUEUE_URL = QUEUE_URL;
+        this.M2W_QUEUE_URL = QUEUE_URL; //
         mapper = new ObjectMapper();
     }
 
