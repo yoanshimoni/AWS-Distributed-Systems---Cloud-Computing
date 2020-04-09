@@ -10,18 +10,24 @@ import java.io.File;
 public class S3BucketOps {
 
     protected String path;
-    String bucketName = "bucket" + System.currentTimeMillis();
+    public StringBuilder stringBuilder = new StringBuilder();
+    public String bucketName;
+    public String localAppId;
 
-    public S3BucketOps(String path) {
+
+    public S3BucketOps(String path, String localAppId) {
         this.path = path;
+        this.localAppId = localAppId;
+        stringBuilder.append("bucket");
+        stringBuilder.append(localAppId);
+        bucketName = stringBuilder.toString();
         createBucket(this.path);
     }
 
     public void createBucket(String path) {
 
         File resources = new File(path);
-        String key = "resources";
-        String amiId = "ami-b66ed3de";
+        String key = "resources" + localAppId;
         Region region = Region.US_EAST_1;
         S3Client s3 = S3Client
                 .builder()
@@ -61,6 +67,7 @@ public class S3BucketOps {
                         .key(key)
                         .build(),
                 RequestBody.fromFile(file));
+        System.out.printf("uploaded %s to s3\n", key);
     }
 }
 

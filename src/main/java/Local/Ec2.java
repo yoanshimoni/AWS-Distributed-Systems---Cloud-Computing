@@ -62,7 +62,7 @@ public class Ec2 {
             // snippet-end:[ec2.java2.create_instance.main]
             System.out.println("Done!");
         } else {
-            System.out.println("Manager already exist and yoan is still gay");
+            System.out.println("Manager already exist");
         }
     }
 

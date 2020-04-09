@@ -41,7 +41,6 @@ public class Manager_sqsOPS {
         SqsClient sqsClient = SqsClient.builder()
                 .region(Region.US_EAST_1)
                 .build();
-        System.out.println(queueUrl);
         SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
                 .queueUrl(queueUrl)
                 .messageBody(message)

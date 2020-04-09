@@ -6,14 +6,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Task {
-    public String bucketName;
-    public int numOfWorkers;
+    private String bucketName;
+    private int numOfWorkers;
+    private String key;
+    private String localAppId;
 
     @JsonCreator
     public Task(@JsonProperty("bucketName") String bucketName,
-                @JsonProperty("numOfWorkers") int numOfWorkers) {
+                @JsonProperty("numOfWorkers") int numOfWorkers,
+                @JsonProperty("key") String key,
+                @JsonProperty("localAppId") String localAppId) {
         this.bucketName = bucketName;
         this.numOfWorkers = numOfWorkers;
+        this.key = key;
+        this.localAppId = localAppId;
     }
 
     public String getBucketName() {
@@ -22,6 +28,14 @@ public class Task {
 
     public int getNumOfWorkers() {
         return numOfWorkers;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getLocalAppId() {
+        return localAppId;
     }
 
     @Override
@@ -35,4 +49,5 @@ public class Task {
         }
         return json;
     }
+
 }

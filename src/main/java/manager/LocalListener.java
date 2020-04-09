@@ -19,11 +19,12 @@ import java.util.Scanner;
 
 public class LocalListener implements MessageListener {
     private int numOfFiles = 0;
+    private int PDFPerWorker = 0;
     private ObjectMapper mapper;
-    private String QUEUE_URL;
+    private String M2W_QUEUE_URL;
 
     public LocalListener(String QUEUE_URL) {
-        this.QUEUE_URL = QUEUE_URL;
+        this.M2W_QUEUE_URL = QUEUE_URL;
         mapper = new ObjectMapper();
     }
 
@@ -37,13 +38,19 @@ public class LocalListener implements MessageListener {
         }
         // Convert message to NewTask object
         Task newTask = parseMsg(msg);
-
+        this.PDFPerWorker = newTask.getNumOfWorkers();
         download(newTask);
+        int numOfWorkers = numOfFiles / newTask.getNumOfWorkers();
+        if (numOfWorkers > 3) {
+            numOfWorkers = 2;
+        }
+        Manager.nodesCreationPool.execute(new CreateWorkers(numOfWorkers));
+
 
         // Create a task to download and parse S3 file content
-        //Manager.downloadPool.execute(new DownloadAndParse(newTask));
 
         // Tell SQS to delete the message
+
         try {
             msg.acknowledge();
         } catch (JMSException ex) {
@@ -70,8 +77,7 @@ public class LocalListener implements MessageListener {
     }
 
     private void download(Task newTask) {
-        Manager_sqsOPS manager_sqsOPS = new Manager_sqsOPS();
-        String key = "resources";
+        String key = newTask.getKey();
         String bucketName = newTask.getBucketName();
         Region region = Region.US_EAST_1;
         S3Client s3 = S3Client
@@ -84,11 +90,11 @@ public class LocalListener implements MessageListener {
         stringBuilder.append("resources");
         stringBuilder.append(Calendar.getInstance().getTimeInMillis());
         stringBuilder.append(".txt");
-        System.out.printf("Downloaded the file, saved to be:\t%s\n",stringBuilder.toString());
 
         s3.getObject(GetObjectRequest.builder().bucket(bucketName).key(key).build(),
                 ResponseTransformer.toFile(Paths.get(stringBuilder.toString())));
 
+        System.out.printf("Downloaded the file, saved to be:\t%s\n", stringBuilder.toString());
 
         try {
             File myObj = new File(stringBuilder.toString());
@@ -97,7 +103,8 @@ public class LocalListener implements MessageListener {
                 this.numOfFiles++;
                 String data = myReader.nextLine();
                 String[] parts = data.split("\t", 2);
-                Manager.distributionPool.execute(new SendNewPDFtask(this.QUEUE_URL, parts[0], parts[1]));
+                Manager.distributionPool.execute(new SendNewPDFtask(this.M2W_QUEUE_URL,
+                        parts[0], parts[1], this.PDFPerWorker));
 
             }
 
@@ -106,6 +113,6 @@ public class LocalListener implements MessageListener {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        System.out.printf("num of file is %d\n", this.numOfFiles);
+        System.out.printf("number of files is %d\n", this.numOfFiles);
     }
 }
