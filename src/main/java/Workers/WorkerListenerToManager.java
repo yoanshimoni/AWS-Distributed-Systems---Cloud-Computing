@@ -10,16 +10,18 @@ import java.io.IOException;
 
 public class WorkerListenerToManager implements MessageListener {
     private ObjectMapper objectMapper;
+    private String instanceId;
 
-    public WorkerListenerToManager() {
+    public WorkerListenerToManager(String instanceId) {
         objectMapper = new ObjectMapper();
+        this.instanceId = instanceId;
     }
 
     @Override
     public void onMessage(Message msg) {
 
         NewPDFtask newPDFtask = parseMsg(msg);
-        Worker.slaves.execute(new HandleRequest(newPDFtask));
+        Worker.slaves.execute(new HandleTask(newPDFtask,instanceId));
         // Tell SQS to delete the message
         try {
             msg.acknowledge();

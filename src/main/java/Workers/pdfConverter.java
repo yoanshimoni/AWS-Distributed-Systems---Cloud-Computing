@@ -11,28 +11,38 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Paths;
 
 
 public class pdfConverter {
-    private String path;
+    private final String path;
+    private StringBuilder stringBuilder;
 
     public pdfConverter(String path) {
         this.path = path;
+        String path_with_suffix = Paths.get(path).getFileName().toString();
+        String path_without_pdf_suffix = path_with_suffix.substring(0, path_with_suffix.length() - 4);
+        stringBuilder = new StringBuilder(path_without_pdf_suffix);
+
     }
 
 
-    public void readPDF(String TO) throws Exception {
+    public String readPDF(String TO) throws Exception {
         switch (TO) {
             case "ToImage":
                 PDFtoJPG(this.path);
-                break;
+                this.stringBuilder.append(".png");
+                return this.stringBuilder.toString();
             case "ToHTML":
                 generateHTMLFromPDF(this.path);
-                break;
+                this.stringBuilder.append(".html");
+                return this.stringBuilder.toString();
             case "ToText":
                 PDFtoText(this.path);
-                break;
+                this.stringBuilder.append(".txt");
+                return this.stringBuilder.toString();
         }
+        return "null";
     }
 
     private void generateHTMLFromPDF(String pathString) throws IOException {
@@ -56,6 +66,7 @@ public class pdfConverter {
         PDFRenderer pr = new PDFRenderer(pd);
         BufferedImage bi = pr.renderImageWithDPI(0, 300);
         ImageIO.write(bi, "png", new File(out));
+        pd.close();
     }
 
     private void PDFtoText(String pathString) throws IOException {

@@ -7,14 +7,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-public class HandleRequest implements Runnable {
+public class HandleTask implements Runnable {
 
     private NewPDFtask newPDFtask;
     private String name_for_debug;
-    private String OP_for_debug;
+    private String instanceId;
 
-    public HandleRequest(NewPDFtask newPDFtask) {
+    public HandleTask(NewPDFtask newPDFtask, String instanceId) {
         this.newPDFtask = newPDFtask;
+        this.instanceId = instanceId;
     }
 
     @Override
@@ -22,14 +23,12 @@ public class HandleRequest implements Runnable {
         try {
             String fileName = DownloadPDF(newPDFtask);
             this.name_for_debug = fileName;
-            this.OP_for_debug = newPDFtask.getOperation();
             pdfConverter pdfConverter = new pdfConverter(fileName);
-            pdfConverter.readPDF(newPDFtask.getOperation());
+            final String newFileName = pdfConverter.readPDF(newPDFtask.getOperation());
+            UploadToS3(newFileName);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.printf("this is from %s \n", name_for_debug);
+            System.out.printf("failed to convert %s\n", name_for_debug);
         }
-
     }
 
     private String DownloadPDF(NewPDFtask newPDFtask) throws MalformedURLException {
@@ -44,8 +43,20 @@ public class HandleRequest implements Runnable {
             }
             System.out.printf("Successfully downloaded %s\n", name);
         } catch (IOException e) {
-            // handles IO exceptions
+            System.out.printf("failed to download %s\n", name);
         }
         return name;
     }
+
+    private void UploadToS3(String fileName) {
+        System.out.printf("uploading %s\n", fileName);
+        try {
+            S3BucketOps s3BucketOps = new S3BucketOps();
+            s3BucketOps.uploadFileV2(instanceId, fileName);
+        } catch (Exception e) {
+            System.out.println("fuck");
+        }
+    }
+
+
 }
