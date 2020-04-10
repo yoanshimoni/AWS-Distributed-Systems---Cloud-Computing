@@ -25,6 +25,8 @@ public class WorkerListner implements MessageListener {
         DonePDFTask donePDFTask = parseMsg(message);
         System.out.println(donePDFTask.getResult());
 
+
+
         try {
             message.acknowledge();
         } catch (JMSException ex) {

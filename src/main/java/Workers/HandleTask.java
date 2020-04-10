@@ -28,10 +28,10 @@ public class HandleTask implements Runnable {
             pdfConverter pdfConverter = new pdfConverter(fileName);
             final String newFileName = pdfConverter.readPDF(newPDFtask.getOperation());
             UploadToS3(newFileName);
-            this.donePDFTask.setResult(newFileName);
+            this.donePDFTask.setResult(false,newFileName);
         } catch (Exception e) {
 //            System.out.printf("failed to convert %s\n", name_for_debug);
-            this.donePDFTask.setResult("failed to convert " + name_for_debug);
+            this.donePDFTask.setResult(true,"failed to convert " + name_for_debug);
         }
 
         Worker.worker_sqsOPS.SendMessage(this.donePDFTask.toString());
@@ -51,7 +51,7 @@ public class HandleTask implements Runnable {
             System.out.printf("Successfully downloaded %s\n", name);
         } catch (IOException e) {
 //            System.out.printf("failed to download %s\n", name);
-            this.donePDFTask.setResult("failed to download " + name);
+            this.donePDFTask.setResult(true,"failed to download " + name);
         }
         return name;
     }

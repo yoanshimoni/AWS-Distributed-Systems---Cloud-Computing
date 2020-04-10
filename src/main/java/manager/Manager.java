@@ -17,6 +17,7 @@ public class Manager {
     static ExecutorService distributionPool;
     static ExecutorService nodesCreationPool;
     static ExecutorService ConvertPDFPool;
+    static ExecutorService filesPool;
     static final int DOWNLOAD_THREADS = 5;
     static final int DISTRIBUTION_THREADS = 100; //we go hard
     static final int CREATION_THREADS = 1; // this will create workers
@@ -50,6 +51,7 @@ public class Manager {
         distributionPool = Executors.newFixedThreadPool(DISTRIBUTION_THREADS);
         nodesCreationPool = Executors.newFixedThreadPool(CREATION_THREADS);
         ConvertPDFPool = Executors.newFixedThreadPool(CONVERT_THREADS);
+        filesPool = Executors.newCachedThreadPool();
 
     }
 }

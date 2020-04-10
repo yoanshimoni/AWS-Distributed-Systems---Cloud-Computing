@@ -6,23 +6,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DonePDFTask {
-    private final String Operation;
+    private final String operation;
     private final String URL;
     private String result;
-    private String BucketName;
+    private String bucketName;
 
     /**
-     * @param operationnot
+     * @param operation
      * @param URL
      * @param result       - if the task succeeded than result will be the key(name) of the file.
      *                     else it will be failed
      */
     @JsonCreator
     public DonePDFTask(@JsonProperty("operation") String operation, @JsonProperty("url") String URL
-            , @JsonProperty("bucketname") String BucketName, @JsonProperty("result") String result) {
-        this.Operation = operation;
+            , @JsonProperty("bucketName") String bucketName, @JsonProperty("result") String result) {
+        this.operation = operation;
         this.URL = URL;
-        this.BucketName = BucketName;
+        this.bucketName = bucketName;
         this.result = result;
     }
 
@@ -31,11 +31,11 @@ public class DonePDFTask {
     }
 
     public String getBucketName() {
-        return BucketName;
+        return bucketName;
     }
 
     public String getOperation() {
-        return Operation;
+        return operation;
     }
 
     public String getResult() {
@@ -43,8 +43,12 @@ public class DonePDFTask {
     }
 
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setResult(boolean failed, String Key) {
+        if (failed) {
+            this.result = Key;
+        } else {
+            this.result = "https://" + bucketName + ".s3.amazonaws.com/" + Key;
+        }
     }
 
     @Override
