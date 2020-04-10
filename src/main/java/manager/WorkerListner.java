@@ -22,9 +22,8 @@ public class WorkerListner implements MessageListener {
     public void onMessage(Message message) {
 
 
-
-        NewPDFtask newPDFtask = parseMsg(message);
-        System.out.println(newPDFtask.toString());
+        DonePDFTask donePDFTask = parseMsg(message);
+        System.out.println(donePDFTask.getResult());
 
         try {
             message.acknowledge();
@@ -33,16 +32,16 @@ public class WorkerListner implements MessageListener {
         }
     }
 
-    private NewPDFtask parseMsg(Message msg) {
-        NewPDFtask pdfTask = null;
+    private DonePDFTask parseMsg(Message msg) {
+        DonePDFTask donePDFTask = null;
         try {
             String message = ((TextMessage) msg).getText();
-            pdfTask = mapper.readValue(message, NewPDFtask.class);
+            donePDFTask = mapper.readValue(message, DonePDFTask.class);
         } catch (IOException | JMSException ex) {
             System.err.println("Caught an exception while parsing message");
             ex.printStackTrace();
             System.exit(1);
         }
-        return pdfTask;
+        return donePDFTask;
     }
 }

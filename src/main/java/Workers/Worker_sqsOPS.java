@@ -37,12 +37,12 @@ public class Worker_sqsOPS {
 
     }
 
-    public void SendMessage(String message, String queueUrl) {
+    public void SendMessage(String message) {
         SqsClient sqsClient = SqsClient.builder()
                 .region(Region.US_EAST_1)
                 .build();
         SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(this.queueUrl)
                 .messageBody(message)
                 .build();
         sqsClient.sendMessage(sendMsgRequest);
