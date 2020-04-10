@@ -32,14 +32,16 @@ public class LocalListener implements MessageListener {
     public void onMessage(Message msg) {
 
         try {
-            System.out.printf("Received: %s\n", ((TextMessage) msg).getText());
+            System.out.printf("Received a new task from local app: %s\n", ((TextMessage) msg).getText());
         } catch (JMSException e) {
             e.printStackTrace();
         }
         // Convert message to NewTask object
         Task newTask = parseMsg(msg);
+        Manager.fileManager.addFile(newTask.getKey(), newTask.getLocalAppId());
         this.PDFPerWorker = newTask.getNumOfWorkers();
         download(newTask);
+        Manager.fileManager.setNumOfImagesInFile(newTask.getKey(), this.numOfFiles);
         int numOfWorkers = numOfFiles / newTask.getNumOfWorkers();
         if (numOfWorkers > 3) {
             numOfWorkers = 2;
@@ -104,7 +106,7 @@ public class LocalListener implements MessageListener {
                 String data = myReader.nextLine();
                 String[] parts = data.split("\t", 2);
                 Manager.distributionPool.execute(new SendNewPDFtask(this.M2W_QUEUE_URL,
-                        parts[0], parts[1], this.PDFPerWorker));
+                        parts[0], parts[1], this.PDFPerWorker,newTask.getKey(),newTask.getLocalAppId()));
 
             }
 

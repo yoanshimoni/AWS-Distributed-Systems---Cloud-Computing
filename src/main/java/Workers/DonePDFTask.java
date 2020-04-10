@@ -11,11 +11,13 @@ public class DonePDFTask {
     private String result;
     private String bucketName;
 
+
+    /*TODO continue to work on this, change the parameters*/
     /**
      * @param operation
      * @param URL
-     * @param result       - if the task succeeded than result will be the key(name) of the file.
-     *                     else it will be failed
+     * @param result    - if the task succeeded than result will be the key(name) of the file.
+     *                  else it will be failed
      */
     @JsonCreator
     public DonePDFTask(@JsonProperty("operation") String operation, @JsonProperty("url") String URL
@@ -62,5 +64,10 @@ public class DonePDFTask {
         }
         return json;
     }
+
+    public String getSummaryTask() {
+        return this.getOperation() + " " + this.getURL() + " " + this.getResult();
+    }
+
 
 }

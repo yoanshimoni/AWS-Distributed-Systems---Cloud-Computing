@@ -23,6 +23,7 @@ public class Manager {
     static final int CREATION_THREADS = 1; // this will create workers
     static final int CONVERT_THREADS = 10;
 
+    static FileManager fileManager;
 
     private static QueueConnection connectionToLocalApp;
     private static QueueConnection connectionToWorkers;
@@ -53,5 +54,6 @@ public class Manager {
         ConvertPDFPool = Executors.newFixedThreadPool(CONVERT_THREADS);
         filesPool = Executors.newCachedThreadPool();
 
+        fileManager = new FileManager();
     }
 }

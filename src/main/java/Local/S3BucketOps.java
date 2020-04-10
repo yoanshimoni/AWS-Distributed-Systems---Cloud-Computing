@@ -13,21 +13,22 @@ public class S3BucketOps {
     public StringBuilder stringBuilder = new StringBuilder();
     public String bucketName;
     public String localAppId;
+    private String key;
 
 
-    public S3BucketOps(String path, String localAppId) {
+    public S3BucketOps(String path, String localAppId, String key) {
         this.path = path;
         this.localAppId = localAppId;
         stringBuilder.append("bucket");
         stringBuilder.append(localAppId);
         bucketName = stringBuilder.toString();
+        this.key = key+localAppId;
         createBucket(this.path);
     }
 
     public void createBucket(String path) {
 
         File resources = new File(path);
-        String key = "resources" + localAppId;
         Region region = Region.US_EAST_1;
         S3Client s3 = S3Client
                 .builder()
@@ -43,20 +44,7 @@ public class S3BucketOps {
                         CreateBucketConfiguration.builder()
                                 .build())
                 .build());
-
-        // List buckets
-        ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder().build();
-        ListBucketsResponse listBucketsResponse = s3.listBuckets(listBucketsRequest);
-//        listBucketsResponse.buckets().forEach(x -> System.out.println(x.name()));
-
-        uploadFile(resources, s3, this.bucketName, key);
-        // Delete empty bucket
-
-        //printing bucket contents
-
-
-        /*DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder().bucket(bucketName).build();
-        s3.deleteBucket(deleteBucketRequest);*/
+        uploadFile(resources, s3, this.bucketName, this.key);
 
     }
 

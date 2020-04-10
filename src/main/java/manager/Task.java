@@ -6,11 +6,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Task {
-    public String bucketName;
-    public int numOfWorkers;
-    public String key;
-    public String localAppId;
+    private String bucketName;
+    private int numOfWorkers;
+    private String key;
+    private String localAppId;
 
+    /**
+     * @param bucketName   - the bucket name where the input file is
+     * @param numOfWorkers - number of pdf per worker
+     * @param key          - this how we will access the file in bucket file in the bucket
+     * @param localAppId   - the identifier of the local aap
+     */
     @JsonCreator
     public Task(@JsonProperty("bucketName") String bucketName,
                 @JsonProperty("numOfWorkers") int numOfWorkers,

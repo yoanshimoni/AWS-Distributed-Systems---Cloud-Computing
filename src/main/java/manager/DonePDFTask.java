@@ -63,4 +63,7 @@ public class DonePDFTask {
         return json;
     }
 
+    public String getSummaryTask() {
+        return this.getOperation() + " " + this.getURL() + " " + this.getResult();
+    }
 }

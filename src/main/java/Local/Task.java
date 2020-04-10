@@ -11,6 +11,12 @@ public class Task {
     private String key;
     private String localAppId;
 
+    /**
+     * @param bucketName   - the bucket name where the input file is
+     * @param numOfWorkers - number of pdf per worker
+     * @param key          - this how we will access the file in bucket file in the bucket
+     * @param localAppId   - the identifier of the local aap
+     */
     @JsonCreator
     public Task(@JsonProperty("bucketName") String bucketName,
                 @JsonProperty("numOfWorkers") int numOfWorkers,
