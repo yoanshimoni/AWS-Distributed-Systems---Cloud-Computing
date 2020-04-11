@@ -77,9 +77,10 @@ public class ManagerListner implements MessageListener {
         br.close();
         pdfConverter pdfConverter = new pdfConverter(outputName);
         try {
-            pdfConverter.readPDF("ToHTML");
+            pdfConverter.convert2HTML(outputName);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("finished converting to html");
     }
 }

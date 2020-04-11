@@ -1,7 +1,5 @@
 package Local;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -76,7 +74,7 @@ public class pdfConverter {
         document.close();
     }
 
-    public void SummaryFileToHTML(String SummryFileName,String outputName) throws IOException, DocumentException {
+   /* public void SummaryFileToHTML(String SummryFileName,String outputName) throws IOException, DocumentException {
         com.itextpdf.text.Document pdfDoc = new com.itextpdf.text.Document(PageSize.A4);
         PdfWriter.getInstance(pdfDoc, new FileOutputStream(outputName))
                 .setPdfVersion(PdfWriter.PDF_VERSION_1_7);
@@ -101,5 +99,19 @@ public class pdfConverter {
         }
 
         System.out.println("converted to html");
+    }*/
+
+    public void convert2HTML(String pathString) throws IOException {
+        File file = new File(pathString);
+        PDDocument document = PDDocument.load(file);
+        PDFText2HTML stripper = new PDFText2HTML();
+        stripper.setStartPage(1);
+        stripper.setEndPage(1);
+        StringWriter writer = new StringWriter();
+        stripper.writeText(document, writer);
+        PrintWriter pw = new PrintWriter(pathString + ".html");
+        pw.print(writer.toString());
+        pw.close();
+        document.close();
     }
 }

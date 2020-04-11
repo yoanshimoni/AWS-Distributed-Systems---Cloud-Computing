@@ -77,7 +77,7 @@ public class S3BucketOps {
     public void downloadSummaryFile() {
         this.s3.getObject(GetObjectRequest.builder().bucket(this.bucketName).key(this.key).build(),
                 ResponseTransformer.toFile(Paths.get(this.key)));
-        System.out.printf("Downloaded %s", this.key);
+        System.out.printf("Downloaded %s\n", this.key);
     }
 }
 
