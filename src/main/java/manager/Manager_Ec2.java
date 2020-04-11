@@ -1,13 +1,9 @@
 package manager;
 
-import Local.sqsOPS;
 import com.amazonaws.AmazonClientException;
-import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
-import software.amazon.awssdk.services.sqs.model.Message;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -114,24 +110,7 @@ public class Manager_Ec2 {
         return false;
     }
 
-    public String checkForMessage(sqsOPS sqsOPS) {
-        try {
-            ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder().
-                    queueUrl(sqsOPS.queueUrl)
-                    .build();
-            List<Message> messages = sqsOPS.sqsClient.receiveMessage(receiveRequest).messages();
-            for (Message x : messages) {
-                if (x.body().toLowerCase().contains("bucket".toLowerCase())) {
-                    return x.body();
-                }
-            }
-            return null;
-        } catch (AwsServiceException e) {
-            e.printStackTrace();
-            return null;
-        }
 
-    }
 
     public Collection<String> getWorkerIds(Ec2Client ec2) {
         Collection<String> res = new ArrayList<String>();

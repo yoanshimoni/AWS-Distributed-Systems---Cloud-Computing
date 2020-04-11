@@ -8,11 +8,13 @@ public class FileManager {
     private final String QUEUE_NAME_FORMAT = "ManagerTo%s";
     private final String SUMMARY_FILE_FORMAT = "%s-summary";
     private ConcurrentHashMap<String, SummaryFile> files;
-    S3BucketOps s3 = new S3BucketOps();
+    private S3BucketOps s3 = new S3BucketOps();
+    private Manager_sqsOPS manager_SQS;
 
     public FileManager() {
         this.files = new ConcurrentHashMap<>();
         s3.CreateClient();
+        manager_SQS = new Manager_sqsOPS();
     }
 
     /**
@@ -57,19 +59,19 @@ public class FileManager {
                 this.s3.uploadFileV2(summaryFile.getFile(), bucketName, summaryFile.getFilename());
 
 
-              /*  // Create DoneTask to send to local app
+                // Create DoneTask to send to local app
                 DoneTask doneTask = new DoneTask(bucketName, summaryFile.getFilename());
 
-                // Create SQS queue if not exists
+                // Create SQS queue if not exists or get the queue URL
                 String queueName = String.format(QUEUE_NAME_FORMAT, summaryFile.getLocalAppId());
-                SQSHelper.createSQSQueue(dsps.ass1.manager.Manager.M2Lsqs, queueName);
-                String queueUrl = dsps.ass1.manager.Manager.M2Lsqs.getQueueUrl(queueName).getQueueUrl();
-
-                // Send SQS message to local app
-                SQSHelper.sendSQSMessage(dsps.ass1.manager.Manager.M2Lsqs, queueUrl, doneTask.toString());*/
+                String queueURL = this.manager_SQS.createSQS(queueName);
+                //sending done task
+                this.manager_SQS.SendMessage(doneTask.toString(), queueURL);
 
                 // Remove file from file system
-//                summaryFile.getFile().delete();
+                if (summaryFile.getFile().delete()) {
+                    System.out.println("successfully deleted " + summaryFile.getFilename());
+                }
                 files.remove(filename);
             }
         }

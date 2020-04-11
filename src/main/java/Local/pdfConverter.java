@@ -76,16 +76,16 @@ public class pdfConverter {
         document.close();
     }
 
-    public void SummaryFileToHTML(String fileName) throws IOException, DocumentException {
+    public void SummaryFileToHTML(String SummryFileName,String outputName) throws IOException, DocumentException {
         com.itextpdf.text.Document pdfDoc = new com.itextpdf.text.Document(PageSize.A4);
-        PdfWriter.getInstance(pdfDoc, new FileOutputStream("txt.pdf"))
+        PdfWriter.getInstance(pdfDoc, new FileOutputStream(outputName))
                 .setPdfVersion(PdfWriter.PDF_VERSION_1_7);
         pdfDoc.open();
         Font myfont = new Font();
         myfont.setStyle(Font.NORMAL);
         myfont.setSize(11);
         pdfDoc.add(new Paragraph("\n"));
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        BufferedReader br = new BufferedReader(new FileReader(SummryFileName));
         String strLine;
         while ((strLine = br.readLine()) != null) {
             Paragraph para = new Paragraph(strLine + "\n", myfont);
@@ -99,5 +99,7 @@ public class pdfConverter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("converted to html");
     }
 }

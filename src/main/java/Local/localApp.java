@@ -1,9 +1,13 @@
 package Local;
 
+import manager.QueueConnection;
+
 import java.util.UUID;
 
 
 public class localApp {
+    private final static String QUEUE_NAME_FORMAT = "ManagerTo%s";
+    private static QueueConnection connectionToManager;
 
     public static void main(String[] args) {
 
@@ -19,7 +23,10 @@ public class localApp {
         String L2M_QUEUE_URL = sqsOPS.createSQS(L2M_QUEUE);
         Task task = new Task(s3.bucketName, numOfWorkers, args[1] + localAppId, localAppId);
         sqsOPS.SendMessage(task.toString(), L2M_QUEUE_URL); // sent a message with the Task to L2M_Queue
-
+        String ManagerToLocalAppQueue = String.format(QUEUE_NAME_FORMAT, localAppId);
+        String queueURL = sqsOPS.createSQS(ManagerToLocalAppQueue);
+        connectionToManager = new QueueConnection(ManagerToLocalAppQueue, new ManagerListner(args[1]));
+        connectionToManager.start();
 
     }
 

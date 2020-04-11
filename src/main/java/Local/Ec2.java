@@ -1,14 +1,10 @@
 package Local;
 
-import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
-import software.amazon.awssdk.services.sqs.model.Message;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
 
 import java.util.Base64;
-import java.util.List;
 
 public class Ec2 {
     Ec2Client ec2Client = null;
@@ -107,6 +103,7 @@ public class Ec2 {
         return false;
     }
 
+/*
     public String checkForMessage(sqsOPS sqsOPS) {
         try {
             ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder().
@@ -125,5 +122,6 @@ public class Ec2 {
         }
 
     }
+*/
 
 }

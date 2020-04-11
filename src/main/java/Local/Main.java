@@ -1,17 +1,16 @@
 package Local;
 
-import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException, DocumentException {
 //        downLoadHtml("output7cdfddcf-776f-49cb-9e60-ef84d5a9f918-summary");
-      /*  String filename = "output7cdfddcf-776f-49cb-9e60-ef84d5a9f918-summary";
+        String filename = "output3cdeb6f7-fa82-44a5-95f2-e4a031a0bc97-summary";
         com.itextpdf.text.Document pdfDoc = new com.itextpdf.text.Document(PageSize.A4);
         PdfWriter.getInstance(pdfDoc, new FileOutputStream("txt.pdf"))
                 .setPdfVersion(PdfWriter.PDF_VERSION_1_7);
@@ -34,7 +33,7 @@ public class Main {
             pdfConverter.readPDF("ToHTML");
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
 
