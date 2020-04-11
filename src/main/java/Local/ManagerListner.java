@@ -25,14 +25,9 @@ public class ManagerListner implements MessageListener {
         DoneTask doneTask = parseMsg(message);
         S3BucketOps s3BucketOps = new S3BucketOps(doneTask.getBucket(), doneTask.getKey());
         s3BucketOps.downloadSummaryFile();
-        /*pdfConverter pdfConverter = new pdfConverter(doneTask.getKey());
+
         try {
-            pdfConverter.SummaryFileToHTML(doneTask.getKey(),this.outputFileName);
-        } catch (IOException | DocumentException e) {
-            e.printStackTrace();
-        }*/
-        try {
-            this.html(doneTask.getKey(), this.outputFileName);
+            this.convert2HTML(doneTask.getKey(), this.outputFileName);
         } catch (IOException | DocumentException e) {
             e.printStackTrace();
         }
@@ -57,7 +52,15 @@ public class ManagerListner implements MessageListener {
         return doneTask;
     }
 
-    private void html(String SummryFileName, String outputName) throws IOException, DocumentException {
+    /**
+     * we will convert the text file to PDF and than from PDF to text file
+     *
+     * @param SummryFileName - THE TEXT FILE
+     * @param outputName -  THE NAME OF THE HTML FILE
+     * @throws IOException
+     * @throws DocumentException
+     */
+    private void convert2HTML(String SummryFileName, String outputName) throws IOException, DocumentException {
         com.itextpdf.text.Document pdfDoc = new com.itextpdf.text.Document(PageSize.A4);
         PdfWriter.getInstance(pdfDoc, new FileOutputStream(outputName))
                 .setPdfVersion(PdfWriter.PDF_VERSION_1_7);

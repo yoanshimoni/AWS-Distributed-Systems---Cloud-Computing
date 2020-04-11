@@ -74,33 +74,6 @@ public class pdfConverter {
         document.close();
     }
 
-   /* public void SummaryFileToHTML(String SummryFileName,String outputName) throws IOException, DocumentException {
-        com.itextpdf.text.Document pdfDoc = new com.itextpdf.text.Document(PageSize.A4);
-        PdfWriter.getInstance(pdfDoc, new FileOutputStream(outputName))
-                .setPdfVersion(PdfWriter.PDF_VERSION_1_7);
-        pdfDoc.open();
-        Font myfont = new Font();
-        myfont.setStyle(Font.NORMAL);
-        myfont.setSize(11);
-        pdfDoc.add(new Paragraph("\n"));
-        BufferedReader br = new BufferedReader(new FileReader(SummryFileName));
-        String strLine;
-        while ((strLine = br.readLine()) != null) {
-            Paragraph para = new Paragraph(strLine + "\n", myfont);
-            para.setAlignment(Element.ALIGN_JUSTIFIED);
-            pdfDoc.add(para);
-        }
-        pdfDoc.close();
-        br.close();
-        try {
-            this.readPDF("ToHTML");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("converted to html");
-    }*/
-
     public void convert2HTML(String pathString) throws IOException {
         File file = new File(pathString);
         PDDocument document = PDDocument.load(file);
