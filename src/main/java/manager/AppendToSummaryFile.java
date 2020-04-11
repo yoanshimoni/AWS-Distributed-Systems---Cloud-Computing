@@ -1,6 +1,6 @@
 package manager;
 
-public class AppendToSummaryFile implements Runnable{
+public class AppendToSummaryFile implements Runnable {
     private DonePDFTask donePDFTask;
 
     public AppendToSummaryFile(DonePDFTask donePDFTask) {
@@ -9,6 +9,7 @@ public class AppendToSummaryFile implements Runnable{
 
     @Override
     public void run() {
-//        Manager.fileManager.appendToFile();
+        String data = donePDFTask.getOperation() + " " + donePDFTask.getURL() + " " + donePDFTask.getResult();
+        Manager.fileManager.appendToFile(donePDFTask.getKey(),data);
     }
 }

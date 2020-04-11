@@ -17,7 +17,12 @@ public class HandleTask implements Runnable {
     public HandleTask(NewPDFtask newPDFtask, String instanceId) {
         this.newPDFtask = newPDFtask;
         this.instanceId = instanceId;
-        donePDFTask = new DonePDFTask(newPDFtask.getOperation(), newPDFtask.getURL(), instanceId, "");
+        donePDFTask = new DonePDFTask(newPDFtask.getOperation(),
+                newPDFtask.getURL(),
+                instanceId,
+                "",
+                newPDFtask.getKey(),
+                newPDFtask.getLocalAppId());
     }
 
     @Override
@@ -28,10 +33,10 @@ public class HandleTask implements Runnable {
             pdfConverter pdfConverter = new pdfConverter(fileName);
             final String newFileName = pdfConverter.readPDF(newPDFtask.getOperation());
             UploadToS3(newFileName);
-            this.donePDFTask.setResult(false,newFileName);
+            this.donePDFTask.setResult(false, newFileName);
         } catch (Exception e) {
 //            System.out.printf("failed to convert %s\n", name_for_debug);
-            this.donePDFTask.setResult(true,"failed to convert " + name_for_debug);
+            this.donePDFTask.setResult(true, "failed to convert " + name_for_debug);
         }
 
         Worker.worker_sqsOPS.SendMessage(this.donePDFTask.toString());
@@ -48,10 +53,10 @@ public class HandleTask implements Runnable {
             while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
                 fileOS.write(data, 0, byteContent);
             }
-            System.out.printf("Successfully downloaded %s\n", name);
+//            System.out.printf("Successfully downloaded %s\n", name);
         } catch (IOException e) {
 //            System.out.printf("failed to download %s\n", name);
-            this.donePDFTask.setResult(true,"failed to download " + name);
+            this.donePDFTask.setResult(true, "failed to download " + name);
         }
         return name;
     }

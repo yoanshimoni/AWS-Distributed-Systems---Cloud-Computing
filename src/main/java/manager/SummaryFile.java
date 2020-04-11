@@ -53,14 +53,21 @@ public class SummaryFile {
 
     public void setNumOfImages(int numOfImages) {
         this.numOfImages = numOfImages;
+        System.out.printf("set num of images to %s in %s\n", numOfImages, this.filename);
+
     }
 
     public void addPDFTaskResult(String data) {
         this.data.add(data);
+        System.out.printf("Appended to file %s %s\n",this.filename,data);
     }
 
     public boolean isDone() {
         return data.size() == numOfImages;
+    }
+
+    public int getSize(){
+        return data.size();
     }
 
     public void createSummaryFile() {

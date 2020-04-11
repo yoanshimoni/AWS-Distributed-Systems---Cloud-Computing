@@ -34,7 +34,7 @@ public class Worker {
                 .build();
         S3BucketOps s3BucketOps = new S3BucketOps();
         s3BucketOps.createBucketV2(s3, instanceId);
-
+        // worker_sqsOPS - is set to w2m_queue
         worker_sqsOPS = new Worker_sqsOPS();
         worker_sqsOPS.createSQS(W2M_QUEUE);
 

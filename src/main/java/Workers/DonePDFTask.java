@@ -10,22 +10,33 @@ public class DonePDFTask {
     private final String URL;
     private String result;
     private String bucketName;
+    private String key;
+    private String localAppId;
 
 
     /*TODO continue to work on this, change the parameters*/
+
     /**
      * @param operation
      * @param URL
-     * @param result    - if the task succeeded than result will be the key(name) of the file.
-     *                  else it will be failed
+     * @param bucketName
+     * @param result     - the string which represents the result
+     * @param key        - name of the output file - key
+     * @param localAppId - local app identifier
      */
     @JsonCreator
-    public DonePDFTask(@JsonProperty("operation") String operation, @JsonProperty("url") String URL
-            , @JsonProperty("bucketName") String bucketName, @JsonProperty("result") String result) {
+    public DonePDFTask(@JsonProperty("operation") String operation,
+                       @JsonProperty("url") String URL,
+                       @JsonProperty("bucketName") String bucketName,
+                       @JsonProperty("result") String result,
+                       @JsonProperty("key") String key,
+                       @JsonProperty("localAppId") String localAppId) {
         this.operation = operation;
         this.URL = URL;
         this.bucketName = bucketName;
         this.result = result;
+        this.key = key;
+        this.localAppId = localAppId;
     }
 
     public String getURL() {
@@ -44,6 +55,13 @@ public class DonePDFTask {
         return result;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public String getLocalAppId() {
+        return localAppId;
+    }
 
     public void setResult(boolean failed, String Key) {
         if (failed) {
@@ -65,9 +83,7 @@ public class DonePDFTask {
         return json;
     }
 
-    public String getSummaryTask() {
-        return this.getOperation() + " " + this.getURL() + " " + this.getResult();
-    }
+
 
 
 }

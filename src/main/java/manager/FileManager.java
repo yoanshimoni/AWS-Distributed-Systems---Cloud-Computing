@@ -16,8 +16,7 @@ public class FileManager {
     }
 
     /**
-     *
-     * @param filename - filename is the key of the task we send
+     * @param filename   - filename is the key of the task we send
      * @param localAppId - the local app id of the local app
      */
     public void addFile(String filename, String localAppId) {
@@ -47,7 +46,9 @@ public class FileManager {
         // No more work to be done for this file
         synchronized (summaryFile) {
             summaryFile.addPDFTaskResult(data);
+            System.out.printf("summery file %s size is %d\n", summaryFile.getFilename(), summaryFile.getSize());
             if (summaryFile.isDone()) {
+                System.out.println("DONE\n\n");
                 summaryFile.createSummaryFile();
                 // Create S3 bucket for summary file and upload file
                 String bucketName = summaryFile.getLocalAppId() + "-summary";
@@ -68,7 +69,7 @@ public class FileManager {
                 SQSHelper.sendSQSMessage(dsps.ass1.manager.Manager.M2Lsqs, queueUrl, doneTask.toString());*/
 
                 // Remove file from file system
-                summaryFile.getFile().delete();
+//                summaryFile.getFile().delete();
                 files.remove(filename);
             }
         }

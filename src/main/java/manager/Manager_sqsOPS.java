@@ -46,7 +46,7 @@ public class Manager_sqsOPS {
                 .messageBody(message)
                 .build();
         sqsClient.sendMessage(sendMsgRequest);
-        System.out.printf("sent %s\n", message);
+        System.out.println("sent message");
 
     }
 }

@@ -21,8 +21,8 @@ public class WorkerListner implements MessageListener {
     @Override
     public void onMessage(Message message) {
         DonePDFTask donePDFTask = parseMsg(message);
-//        Manager.filesPool.execute(new AppendToSummaryFile(donePDFTask));
-        System.out.println(donePDFTask.getSummaryTask());
+        Manager.filesPool.execute(new AppendToSummaryFile(donePDFTask));
+
 
         try {
             message.acknowledge();
