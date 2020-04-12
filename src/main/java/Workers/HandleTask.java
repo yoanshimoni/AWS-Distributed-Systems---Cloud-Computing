@@ -51,11 +51,7 @@ public class HandleTask implements Runnable {
     }
 
     private String DownloadPDF(NewPDFtask newPDFtask) throws MalformedURLException {
-        /*if (newPDFtask.getURL().contains("elijahrocks")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            Date date = new Date();
-            System.out.printf("fucking elija from download %s\n", formatter.format(date));
-        }*/
+
         URL url = new URL(newPDFtask.getURL());
         String name = Paths.get(url.getPath()).getFileName().toString();
         try {/*(BufferedInputStream inputStream = new BufferedInputStream(new URL(newPDFtask.getURL()).openStream());
