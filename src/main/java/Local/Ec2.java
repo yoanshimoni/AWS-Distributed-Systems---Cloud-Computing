@@ -8,6 +8,10 @@ import java.util.Base64;
 
 public class Ec2 {
     Ec2Client ec2Client = null;
+    private static final String MANAGER_USER_DATA_SCRIPT =
+            "#!/bin/bash\n" +
+                    "cd Desktop/dsp202/ass1/out/artifacts/ass1_jar\n" +
+                    "java -jar manager.jar\n";
 
     public Ec2() {
         create();

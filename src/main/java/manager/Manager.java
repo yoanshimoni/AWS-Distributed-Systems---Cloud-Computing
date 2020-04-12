@@ -28,6 +28,11 @@ public class Manager {
     private static QueueConnection connectionToWorkers;
     private static QueueConnection connectionToWorkers2;
     private static QueueConnection connectionToWorkers3;
+    private static QueueConnection connectionToWorkers4;
+    private static QueueConnection connectionToWorkers5;
+    private static QueueConnection connectionToWorkers6;
+    private static QueueConnection connectionToWorkers7;
+    private static QueueConnection connectionToWorkers8;
     private static Manager_sqsOPS manager_SQS;
 
     public static void main(String[] args) {
@@ -40,11 +45,21 @@ public class Manager {
         connectionToLocalApp.start();
 
         connectionToWorkers = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
-        //connectionToWorkers2 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
-       // connectionToWorkers3 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers2 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers3 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers4 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers5 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers6 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers7 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        connectionToWorkers8 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
         connectionToWorkers.start();
-//        connectionToWorkers2.start();
-//        connectionToWorkers3.start();
+        connectionToWorkers2.start();
+        connectionToWorkers3.start();
+        connectionToWorkers4.start();
+        connectionToWorkers5.start();
+       /* connectionToWorkers6.start();
+        connectionToWorkers7.start();
+        connectionToWorkers8.start();*/
         System.out.println(Thread.currentThread().getName());
 
     }

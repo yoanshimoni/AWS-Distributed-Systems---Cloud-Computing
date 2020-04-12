@@ -43,9 +43,10 @@ public class LocalListener implements MessageListener {
         download(newTask);
         Manager.fileManager.setNumOfImagesInFile(newTask.getKey(), this.numOfFiles);
         int numOfWorkers = numOfFiles / newTask.getNumOfWorkers();
-        if (numOfWorkers > 3) {
-            numOfWorkers = 2;
+        if (numOfWorkers > 9) {
+            numOfWorkers = 9;
         }
+        System.out.println("****we are not allowd to create more than 10 overall workers\n*****");
         Manager.nodesCreationPool.execute(new CreateWorkers(numOfWorkers));
 
 
@@ -106,7 +107,7 @@ public class LocalListener implements MessageListener {
                 String data = myReader.nextLine();
                 String[] parts = data.split("\t", 2);
                 Manager.distributionPool.execute(new SendNewPDFtask(this.M2W_QUEUE_URL,
-                        parts[0], parts[1], this.PDFPerWorker,newTask.getKey(),newTask.getLocalAppId()));
+                        parts[0], parts[1], this.PDFPerWorker, newTask.getKey(), newTask.getLocalAppId()));
 
             }
 
