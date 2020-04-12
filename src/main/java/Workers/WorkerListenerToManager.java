@@ -11,6 +11,7 @@ import java.io.IOException;
 public class WorkerListenerToManager implements MessageListener {
     private ObjectMapper objectMapper;
     private String instanceId;
+    private int counter = 0;
 
     public WorkerListenerToManager(String instanceId) {
         objectMapper = new ObjectMapper();
@@ -21,7 +22,9 @@ public class WorkerListenerToManager implements MessageListener {
     public void onMessage(Message msg) {
 
         NewPDFtask newPDFtask = parseMsg(msg);
-        Worker.slaves.execute(new HandleTask(newPDFtask,instanceId));
+        Worker.slaves.execute(new HandleTask(newPDFtask, instanceId));
+        counter++;
+        System.out.printf("counter is %d\n", counter);
         // Tell SQS to delete the message
         try {
             msg.acknowledge();

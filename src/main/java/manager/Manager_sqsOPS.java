@@ -49,4 +49,5 @@ public class Manager_sqsOPS {
         System.out.println("sent message");
 
     }
+
 }

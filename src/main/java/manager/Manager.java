@@ -11,8 +11,7 @@ public class Manager {
     static Ec2Client ec2Client;
     static final String L2M_QUEUE = "L2M_Queue"; // local to manager
     static final String M2W_QUEUE = "M2W_Queue"; // manager to workers
-    static final String W2M_QUEUE = "W2M_Queue";
-    static final String M2W_VISIBILITY_TIMEOUT = "300";
+    static final String W2M_QUEUE = "W2M_Queue"; // workers to manager
     static ExecutorService downloadPool;
     static ExecutorService distributionPool;
     static ExecutorService nodesCreationPool;
@@ -27,6 +26,8 @@ public class Manager {
 
     private static QueueConnection connectionToLocalApp;
     private static QueueConnection connectionToWorkers;
+    private static QueueConnection connectionToWorkers2;
+    private static QueueConnection connectionToWorkers3;
     private static Manager_sqsOPS manager_SQS;
 
     public static void main(String[] args) {
@@ -39,7 +40,12 @@ public class Manager {
         connectionToLocalApp.start();
 
         connectionToWorkers = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+        //connectionToWorkers2 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
+       // connectionToWorkers3 = new QueueConnection(W2M_QUEUE, new WorkerListner(M2W_QUEUE_URL));
         connectionToWorkers.start();
+//        connectionToWorkers2.start();
+//        connectionToWorkers3.start();
+        System.out.println(Thread.currentThread().getName());
 
     }
 

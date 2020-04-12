@@ -59,7 +59,6 @@ public class SummaryFile {
 
     public void addPDFTaskResult(String data) {
         this.data.add(data);
-        System.out.printf("Appended to file %s %s\n",this.filename,data);
     }
 
     public boolean isDone() {

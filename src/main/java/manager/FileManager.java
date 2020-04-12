@@ -1,6 +1,8 @@
 package manager;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FileManager {
@@ -48,7 +50,13 @@ public class FileManager {
         // No more work to be done for this file
         synchronized (summaryFile) {
             summaryFile.addPDFTaskResult(data);
-            System.out.printf("summery file %s size is %d\n", summaryFile.getFilename(), summaryFile.getSize());
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
+            System.out.printf("summery file %s size is %d\t %s\n",
+                    summaryFile.getFilename(),
+                    summaryFile.getSize(),
+                    formatter.format(date));
+
             if (summaryFile.isDone()) {
                 System.out.println("DONE\n\n");
                 summaryFile.createSummaryFile();

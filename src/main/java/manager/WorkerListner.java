@@ -13,6 +13,7 @@ public class WorkerListner implements MessageListener {
     private ObjectMapper mapper;
     String QUEUE_URL;
 
+
     public WorkerListner(String QUEUE_URL) {
         this.mapper = new ObjectMapper();
         this.QUEUE_URL = QUEUE_URL;
@@ -29,6 +30,7 @@ public class WorkerListner implements MessageListener {
         } catch (JMSException ex) {
             System.err.println("Caught an exception while acknowledging message");
         }
+        System.out.printf("finished message %s\n", Thread.currentThread().getName());
     }
 
     private DonePDFTask parseMsg(Message msg) {

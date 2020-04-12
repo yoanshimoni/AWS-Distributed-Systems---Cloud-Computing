@@ -8,13 +8,17 @@ import software.amazon.awssdk.services.sqs.model.*;
 public class Worker_sqsOPS {
 
     public String queueUrl = null;
+    private SqsClient sqsClient;
 
     public Worker_sqsOPS() {
+        this.sqsClient = SqsClient.builder()
+                .region(Region.US_EAST_1)
+                .build();
     }
 
     public String createSQS(String QUEUE_NAME) {
 
-        SqsClient sqsClient = SqsClient.builder()
+        this.sqsClient = SqsClient.builder()
                 .region(Region.US_EAST_1)
                 .build();
         try {
@@ -38,15 +42,15 @@ public class Worker_sqsOPS {
     }
 
     public void SendMessage(String message) {
-        SqsClient sqsClient = SqsClient.builder()
+        /*SqsClient sqsClient = SqsClient.builder()
                 .region(Region.US_EAST_1)
-                .build();
+                .build();*/
         SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
                 .queueUrl(this.queueUrl)
                 .messageBody(message)
                 .build();
-        sqsClient.sendMessage(sendMsgRequest);
-        System.out.println("sent message");
+        this.sqsClient.sendMessage(sendMsgRequest);
+        System.out.println("sent\n" + message);
 
     }
 }

@@ -1,7 +1,8 @@
 package Workers;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,7 +29,13 @@ public class HandleTask implements Runnable {
     @Override
     public void run() {
         try {
+            // if it failed to download than we wont continue
             String fileName = DownloadPDF(newPDFtask);
+            if (fileName.equals("failed")){
+                Worker.worker_sqsOPS.SendMessage(this.donePDFTask.toString());
+                return;
+            }
+
             this.name_for_debug = fileName;
             pdfConverter pdfConverter = new pdfConverter(fileName);
             final String newFileName = pdfConverter.readPDF(newPDFtask.getOperation());
@@ -38,25 +45,30 @@ public class HandleTask implements Runnable {
 //            System.out.printf("failed to convert %s\n", name_for_debug);
             this.donePDFTask.setResult(true, "failed to convert " + name_for_debug);
         }
-
         Worker.worker_sqsOPS.SendMessage(this.donePDFTask.toString());
+
 
     }
 
     private String DownloadPDF(NewPDFtask newPDFtask) throws MalformedURLException {
+        /*if (newPDFtask.getURL().contains("elijahrocks")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date date = new Date();
+            System.out.printf("fucking elija from download %s\n", formatter.format(date));
+        }*/
         URL url = new URL(newPDFtask.getURL());
         String name = Paths.get(url.getPath()).getFileName().toString();
-        try (BufferedInputStream inputStream = new BufferedInputStream(new URL(newPDFtask.getURL()).openStream());
+        try {/*(BufferedInputStream inputStream = new BufferedInputStream(new URL(newPDFtask.getURL()).openStream());
              FileOutputStream fileOS = new FileOutputStream(name)) {
             byte[] data = new byte[1024];
             int byteContent;
             while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
                 fileOS.write(data, 0, byteContent);
-            }
-//            System.out.printf("Successfully downloaded %s\n", name);
+            }*/
+            FileUtils.copyURLToFile(url, new File(name), 5000, 5000);
         } catch (IOException e) {
-//            System.out.printf("failed to download %s\n", name);
             this.donePDFTask.setResult(true, "failed to download " + name);
+            return "failed";
         }
         return name;
     }
