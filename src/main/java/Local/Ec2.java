@@ -10,7 +10,8 @@ public class Ec2 {
     Ec2Client ec2Client = null;
     private static final String MANAGER_USER_DATA_SCRIPT =
             "#!/bin/bash\n" +
-                    "cd Desktop/dsp202/ass1/out/artifacts/ass1_jar\n" +
+                    "cd home/ec2-user/\n" +
+                    "wget https://maorrockyjars.s3.amazonaws.com/manager\n -o manager.jar\n" +
                     "java -jar manager.jar\n";
 
     public Ec2() {
@@ -26,13 +27,13 @@ public class Ec2 {
         String amiId = "ami-076515f20540e6e0b";
 
         if (!checkIfExist(ec2Client)) { // if returned false hence Manager does not exist, so we will create that instance
-            String managerScript = "";
+
             RunInstancesRequest runRequest = RunInstancesRequest.builder()
                     .imageId(amiId)
                     .instanceType(InstanceType.T2_MICRO)
                     .maxCount(1)
                     .minCount(1)
-                    .userData(Base64.getEncoder().encodeToString(managerScript.getBytes()))
+                    .userData(Base64.getEncoder().encodeToString(MANAGER_USER_DATA_SCRIPT.getBytes()))
                     .build();
 
             RunInstancesResponse response = ec2Client.runInstances(runRequest);

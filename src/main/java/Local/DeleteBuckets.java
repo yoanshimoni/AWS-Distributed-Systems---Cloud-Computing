@@ -16,18 +16,17 @@ public class DeleteBuckets {
         Region region = Region.US_EAST_1;
         S3Client s3 = S3Client.builder().region(region).build();
 
-        String[] arr = {"50b885b2-09a4-4b74-910e-09ea2cbe8a4b-summary", "bucketbd48ceee-088e-4492-bf87-3fc0f1a41458",
-                "bucketf8c8e179-b287-4c66-b8f1-a5142f274984", "bucket50b885b2-09a4-4b74-910e-09ea2cbe8a4b",
-                "bucket378fcb93-d9c1-4c37-a822-7b631cf85e20"};
+        String[] arr = {"maorrockyjars", "bucket0a10fa64-0e79-4ca9-9fb3-34f8bd2d4745", "bucketa983a155-1587-468d-9e7b-56e21a92b3f9"};
         List<String> lst = Arrays.asList(arr);
         // List buckets
         ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder().build();
         ListBucketsResponse listBucketsResponse = s3.listBuckets(listBucketsRequest);
         for (Bucket bucket : listBucketsResponse.buckets()) {
-            System.out.println("Deleting " + bucket.name());
             if (lst.contains(bucket.name())) {
+                System.out.println("could not delete " + bucket.name());
                 continue;
             }
+            System.out.println("Deleting " + bucket.name());
             // To delete a bucket, all the objects in the bucket must be deleted first
             ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder().bucket(bucket.name()).build();
             ListObjectsV2Response listObjectsV2Response;

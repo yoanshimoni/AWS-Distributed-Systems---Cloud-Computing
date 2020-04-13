@@ -22,6 +22,7 @@ public class S3BucketOps {
     private S3Client s3;
 
 
+    // key is the name of the output file
     public S3BucketOps(String path, String localAppId, String key) {
         this.path = path;
         this.localAppId = localAppId;
@@ -29,8 +30,14 @@ public class S3BucketOps {
         stringBuilder.append(localAppId);
         bucketName = stringBuilder.toString();
         this.key = key + localAppId;
+        Region region = Region.US_EAST_1;
+        this.s3 = S3Client
+                .builder()
+                .region(region)
+                .build();
         createBucket(this.path);
     }
+
 
     public S3BucketOps(String bucketName, String key) {
         this.bucketName = bucketName;
@@ -43,29 +50,21 @@ public class S3BucketOps {
     }
 
     public void createBucket(String path) {
-
         File resources = new File(path);
-        Region region = Region.US_EAST_1;
-        S3Client s3 = S3Client
-                .builder()
-                .region(region)
-                .build();
-
         System.out.printf("bucket name is %s\n", this.bucketName);
-
-        s3.createBucket(CreateBucketRequest
+        this.s3.createBucket(CreateBucketRequest
                 .builder()
                 .bucket(bucketName)
                 .createBucketConfiguration(
                         CreateBucketConfiguration.builder()
                                 .build())
                 .build());
-        uploadFile(resources, s3, this.bucketName, this.key);
+        uploadFile(resources, this.bucketName, this.key);
 
     }
 
-    private void uploadFile(File file, S3Client s3, String bucket, String key) {
-        s3.putObject(PutObjectRequest
+    private void uploadFile(File file, String bucket, String key) {
+        this.s3.putObject(PutObjectRequest
                         .builder()
                         .bucket(bucket)
                         .key(key)
@@ -79,5 +78,18 @@ public class S3BucketOps {
                 ResponseTransformer.toFile(Paths.get(this.key)));
         System.out.printf("Downloaded %s\n", this.key);
     }
+
+    public void uploadManagerJarFile(String jarPath) {
+        File jar = new File(jarPath);
+        this.s3.putObject(PutObjectRequest
+                        .builder()
+                        .bucket(this.bucketName)
+                        .key("jar")
+                        .build(),
+                RequestBody.fromFile(jar));
+        System.out.printf("uploaded %s to s3\n", jar);
+
+    }
+
 }
 
