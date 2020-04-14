@@ -1,6 +1,8 @@
 package Local;
 
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.ec2.Ec2Client;
+import software.amazon.awssdk.services.ec2.model.*;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.sqs.SqsClient;
@@ -16,7 +18,7 @@ public class DeleteBuckets {
         Region region = Region.US_EAST_1;
         S3Client s3 = S3Client.builder().region(region).build();
 
-        String[] arr = {"maorrockyjars", "bucket0a10fa64-0e79-4ca9-9fb3-34f8bd2d4745", "bucketa983a155-1587-468d-9e7b-56e21a92b3f9"};
+        String[] arr = {"maorrockyjars","bucket0a10fa64-0e79-4ca9-9fb3-34f8bd2d4745", "bucketa983a155-1587-468d-9e7b-56e21a92b3f9"};
         List<String> lst = Arrays.asList(arr);
         // List buckets
         ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder().build();
@@ -65,6 +67,36 @@ public class DeleteBuckets {
         }
 
 
+        Ec2Client ec2 = Ec2Client.builder()
+                .region(Region.US_EAST_1)
+                .build();
+
+        // Create a Filter to find all running instances
+        Filter filter = Filter.builder()
+                .name("instance-state-name")
+                .values("running")
+                .build();
+
+        //Create a DescribeInstancesRequest
+        DescribeInstancesRequest request = DescribeInstancesRequest.builder()
+                .filters(filter)
+                .build();
+
+        // Find the running instances
+        DescribeInstancesResponse response = ec2.describeInstances(request);
+
+        for (Reservation reservation : response.reservations()) {
+            for (Instance instance : reservation.instances()) {
+                StopInstancesRequest instancesRequest = StopInstancesRequest.builder()
+                        .instanceIds(instance.instanceId())
+                        .build();
+
+                ec2.stopInstances(instancesRequest);
+            }
+        }
+
+
     }
+
 }
 

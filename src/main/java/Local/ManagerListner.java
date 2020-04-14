@@ -14,28 +14,33 @@ public class ManagerListner implements MessageListener {
 
     private ObjectMapper mapper;
     private String outputFileName;
+    private String localAppId;
 
-    public ManagerListner(String outputFileName) {
+    public ManagerListner(String outputFileName, String localAppId) {
         this.mapper = new ObjectMapper();
         this.outputFileName = outputFileName;
+        this.localAppId = localAppId;
+
     }
 
     @Override
     public void onMessage(Message message) {
         DoneTask doneTask = parseMsg(message);
-        S3BucketOps s3BucketOps = new S3BucketOps(doneTask.getBucket(), doneTask.getKey());
-        s3BucketOps.downloadSummaryFile();
+        if (doneTask.getLocalAppId().equals(this.localAppId)) {
+            S3BucketOps s3BucketOps = new S3BucketOps(doneTask.getBucket(), doneTask.getKey());
+            s3BucketOps.downloadSummaryFile();
 
-        try {
-            this.convert2HTML(doneTask.getKey(), this.outputFileName);
-        } catch (IOException | DocumentException e) {
-            e.printStackTrace();
-        }
+            try {
+                this.convert2HTML(doneTask.getKey(), this.outputFileName);
+            } catch (IOException | DocumentException e) {
+                e.printStackTrace();
+            }
 
-        try {
-            message.acknowledge();
-        } catch (JMSException ex) {
-            System.err.println("Caught an exception while acknowledging message");
+            try {
+                message.acknowledge();
+            } catch (JMSException ex) {
+                System.err.println("Caught an exception while acknowledging message");
+            }
         }
     }
 
@@ -56,7 +61,7 @@ public class ManagerListner implements MessageListener {
      * we will convert the text file to PDF and than from PDF to text file
      *
      * @param SummryFileName - THE TEXT FILE
-     * @param outputName -  THE NAME OF THE HTML FILE
+     * @param outputName     -  THE NAME OF THE HTML FILE
      * @throws IOException
      * @throws DocumentException
      */

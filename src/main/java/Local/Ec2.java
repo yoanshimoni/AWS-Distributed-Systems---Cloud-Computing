@@ -11,9 +11,8 @@ public class Ec2 {
     private static final String MANAGER_USER_DATA_SCRIPT =
             "#!/bin/bash\n" +
                     "cd home/ec2-user/\n" +
-                    "wget https://maorrockyjars.s3.amazonaws.com/manager\n -o manager.jar\n" +
+                    "wget https://maorrockyjars.s3.amazonaws.com/manager.jar\n" +
                     "java -jar manager.jar\n";
-
     public Ec2() {
         create();
     }
@@ -28,9 +27,12 @@ public class Ec2 {
 
         if (!checkIfExist(ec2Client)) { // if returned false hence Manager does not exist, so we will create that instance
 
+            IamInstanceProfileSpecification role = IamInstanceProfileSpecification.builder().arn("arn:aws:iam::627183742887:instance-profile/maorRole").build();
+
             RunInstancesRequest runRequest = RunInstancesRequest.builder()
                     .imageId(amiId)
-                    .instanceType(InstanceType.T2_MICRO)
+                    .iamInstanceProfile(role)
+                    .instanceType(InstanceType.T2_SMALL)
                     .maxCount(1)
                     .minCount(1)
                     .userData(Base64.getEncoder().encodeToString(MANAGER_USER_DATA_SCRIPT.getBytes()))

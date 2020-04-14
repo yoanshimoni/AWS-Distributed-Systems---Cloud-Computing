@@ -26,6 +26,7 @@ public class sqsOPS {
                     .queueName(QUEUE_NAME)
                     .build();
             queueUrl = sqsClient.getQueueUrl(getQueueRequest).queueUrl();
+
         } catch (QueueNameExistsException e) {
             throw e;
         }
@@ -40,4 +41,6 @@ public class sqsOPS {
         sqsClient.sendMessage(sendMsgRequest);
         System.out.printf("sent %s\n", message);
     }
+
+
 }
